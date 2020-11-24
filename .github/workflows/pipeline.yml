@@ -21,10 +21,20 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 15
-    - name: build project
-      run: mvn clean install
-    - name: review quality
-      uses: SonarSource/sonarcloud-github-action@v1.4
+    - name: cache sonar cloud packages
+      uses: actions/cache@v2.1.3
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
+    - name: Cache Maven packages
+      uses: actions/cache@v2.1.3
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+    - name: test project
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB }}
-        SONAR_TOKEN: ${{ secrets.SONAR }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: mvn clean test org.sonarsource.scanner.maven:sonar-maven-plugin:sonar

@@ -19,8 +19,32 @@ class PairTest {
     }
 
     @Test
-    void whenOfGivenNullValueThenCreateIncompletePair() {
-        final var result = Pair.of("aKey", null);
+    void whenOfGivenNullValueThenThrowException() {
+        assertThrows(NullPointerException.class, () -> Pair.of("key", null));
+    }
+
+    @Test
+    void whenOfNullableGivenNullKeyThenCreateIncompletePair() {
+        final var result = Pair.ofNullable(null, "aValue");
+
+        assertThat(result, is(not(nullValue())));
+
+        assertThat(result.getKey().isPresent(), is(false));
+        assertThrows(NoSuchElementException.class, () -> result.getKey().get());
+
+        assertThat(result.getValue().isPresent(), is(true));
+        assertThat(result.getValue().get(), is("aValue"));
+
+        assertThat(result.isComplete(), is(false));
+        assertThat(result.isIncomplete(), is(true));
+
+        assertThat(result.toMapEntry(), is(instanceOf(Map.Entry.class)));
+        assertThat(result.toString(), is("Pair{key=null, value=aValue}"));
+    }
+
+    @Test
+    void whenOfNullableGivenNullValueThenCreateIncompletePair() {
+        final var result = Pair.ofNullable("aKey", null);
 
         assertThat(result, is(not(nullValue())));
 

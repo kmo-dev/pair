@@ -14,17 +14,22 @@ public class Pair<K extends Comparable<K>, V extends Comparable<V>> implements S
     private final K key;
     private final V value;
 
-    private Pair(@Nonnull final K key, final V value) {
-        this.key = Objects.requireNonNull(key);
+    private Pair(final K key, final V value) {
+        this.key = key;
         this.value = value;
     }
 
-    public static <K extends Comparable<K>, V extends Comparable<V>> Pair<K, V> of(@Nonnull final K key, final V value) {
+    public static <K extends Comparable<K>, V extends Comparable<V>> Pair<K, V> of(@Nonnull final K key, @Nonnull final V value) {
+        return new Pair<>(Objects.requireNonNull(key), Objects.requireNonNull(value));
+    }
+
+    public static <K extends Comparable<K>, V extends Comparable<V>> Pair<K, V> ofNullable(final K key,
+                                                                                           final V value) {
         return new Pair<>(key, value);
     }
 
     public Optional<K> getKey() {
-        return Optional.of(key);
+        return Optional.ofNullable(key);
     }
 
     public Optional<V> getValue() {
@@ -32,15 +37,15 @@ public class Pair<K extends Comparable<K>, V extends Comparable<V>> implements S
     }
 
     public boolean isComplete() {
-        return !isIncomplete();
+        return key != null && value != null;
     }
 
     public boolean isIncomplete() {
-        return value == null;
+        return key == null || value == null;
     }
 
     public Map.Entry<K, V> toMapEntry() {
-        return new AbstractMap.SimpleEntry<K, V>(key, value);
+        return new AbstractMap.SimpleEntry<>(key, value);
     }
 
     @Override

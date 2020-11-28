@@ -44,22 +44,53 @@ public class Pair<K extends Comparable<K>, V extends Comparable<V>> implements S
         return key == null || value == null;
     }
 
+    public boolean isEmpty() {
+        return key == null && value == null;
+    }
+
     public Map.Entry<K, V> toMapEntry() {
         return new AbstractMap.SimpleEntry<>(key, value);
     }
 
     @Override
     public int compareTo(@Nonnull final Pair<K, V> pair) {
-        if (pair.getKey().isPresent() && getKey().isPresent()) {
-            if (pair.getValue().isPresent() && getValue().isPresent()) {
-                final var comparedKey = key.compareTo(pair.key);
-                return comparedKey != 0 ? comparedKey : value.compareTo(pair.value);
-            } else {
+        if (isEmpty() && pair.isEmpty()) {
+            return 1;
+        }
+
+        if (isEmpty()) {
+            return 1;
+        }
+
+        if (getKey().isEmpty() && pair.getKey().isPresent()) {
+            return 1;
+        }
+
+        if (getKey().isEmpty() && pair.getKey().isEmpty()) {
+            if (getValue().isPresent() && pair.getValue().isPresent()) {
+                return value.compareTo(pair.value);
+            }
+            if (getValue().isPresent() && pair.getValue().isEmpty()) {
                 return -1;
             }
-        } else {
+        }
+        if (getKey().isPresent() && pair.getKey().isEmpty()) {
             return -1;
         }
+        if (getKey().isPresent() && pair.getKey().isPresent()) {
+            if (getValue().isPresent() && pair.getValue().isPresent()) {
+                final var comparedKeys = key.compareTo(pair.key);
+                return comparedKeys == 0 ? value.compareTo(pair.value) : comparedKeys;
+            }
+            if (getValue().isPresent() && pair.getValue().isEmpty()) {
+                return -1;
+            }
+            if (getValue().isEmpty() && pair.getValue().isEmpty()) {
+                return key.compareTo(pair.key);
+            }
+        }
+
+        return 1;
     }
 
     @Override

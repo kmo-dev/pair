@@ -86,11 +86,55 @@ class PairTest {
         final var second = Pair.of("B", "2");
         final var third = Pair.of("B", "3");
         final var fourth = Pair.of("C", "1");
+        final var fifth = Pair.ofNullable("C", null);
+        final var sixth = Pair.ofNullable("D", null);
+        final var seventh = Pair.ofNullable(null, "1");
+        final var eighth = Pair.ofNullable(null, "2");
+        final var ninth = Pair.ofNullable(null, null);
 
-        final var result = Stream.of(second, third, fourth, first)
+        final var result = Stream.of(second, third, fourth, first, sixth, seventh, fifth, ninth, eighth)
                 .sorted()
                 .collect(Collectors.toList());
 
-        assertThat(result, contains(first, second, third, fourth));
+        assertThat(result, contains(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth));
     }
+
+    @Test
+    void whenEqualsGivenSameInputThenEqualsIsTrue() {
+        final var pair01 = Pair.ofNullable(null, null);
+        final var pair02 = Pair.ofNullable("aKey", "aValue");
+        final var pair03 = Pair.ofNullable("aKey", null);
+        final var pair04 = Pair.ofNullable(null, "aValue");
+        final var pair05 = Pair.ofNullable("aKey", "aValue");
+        final var pair06 = Pair.ofNullable(1, 2);
+        final var pair07 = Pair.ofNullable("aKey", "1");
+        final var pair08 = Pair.ofNullable("aKey", 1);
+        final var pair09 = Pair.ofNullable("aKey", 2);
+        final var pair10 = Pair.ofNullable("1", "aValue");
+
+        assertThat(pair01, is(Pair.ofNullable(null, null)));
+        assertThat(pair02, is(Pair.ofNullable("aKey", "aValue")));
+        assertThat(pair03, is(Pair.ofNullable("aKey", null)));
+        assertThat(pair04, is(Pair.ofNullable(null, "aValue")));
+        assertThat(pair05, is(Pair.ofNullable("aKey", "aValue")));
+        assertThat(pair06, is(Pair.ofNullable(1, 2)));
+        assertThat(pair07, is(not(Pair.ofNullable("aKey", 1))));
+        assertThat(pair08, is(not(Pair.ofNullable("aKey", "1"))));
+        assertThat(pair09, is(not(Pair.ofNullable(2, "aKey"))));
+        assertThat(pair10, is(not(Pair.ofNullable("aKey", "1"))));
+    }
+
+    @Test
+    void whenEqualsGivenDifferentInputThenEqualsIsFalse() {
+        final var pair07 = Pair.ofNullable("aKey", "1");
+        final var pair08 = Pair.ofNullable("aKey", 1);
+        final var pair09 = Pair.ofNullable("aKey", 2);
+        final var pair10 = Pair.ofNullable("1", "aValue");
+
+        assertThat(pair07, is(not(Pair.ofNullable("aKey", 1))));
+        assertThat(pair08, is(not(Pair.ofNullable("aKey", "1"))));
+        assertThat(pair09, is(not(Pair.ofNullable(2, "aKey"))));
+        assertThat(pair10, is(not(Pair.ofNullable("aKey", "1"))));
+    }
+
 }

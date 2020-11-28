@@ -1,4 +1,5 @@
 # pair
+This single class project provides you a tuple class.
 # status
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![Java CI with Maven](https://github.com/KlemensM/pair/workflows/Java%20CI%20with%20Maven/badge.svg?branch=master)

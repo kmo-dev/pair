@@ -91,12 +91,13 @@ class PairTest {
         final var seventh = Pair.ofNullable(null, "1");
         final var eighth = Pair.ofNullable(null, "2");
         final var ninth = Pair.ofNullable(null, null);
+        final var tenth = Pair.ofNullable(null, null);
 
-        final var result = Stream.of(second, third, fourth, first, sixth, seventh, fifth, ninth, eighth)
+        final var result = Stream.of(second, third, fourth, first, sixth, seventh, fifth, ninth, eighth, tenth)
                 .sorted()
                 .collect(Collectors.toList());
 
-        assertThat(result, contains(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth));
+        assertThat(result, contains(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth));
     }
 
     @Test
